@@ -6,19 +6,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".FormLogin">
+    tools:context=".FormCadastro">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_cadastro"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_halteres" />
+        android:text="Informe os dados abaixo para se cadastar"
+        android:textColor="@color/black"
+        android:textSize="19dp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cria sua conta"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"/>
 
     <EditText
         android:id="@+id/edit_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/edit_text_login"
         android:hint="Email"
@@ -45,21 +63,11 @@
         android:textColorHint="@color/white"
         android:textSize="18dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Coloque seu E-mail"
-        android:textColor="@color/red"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="20dp"/>
-
     <Button
-        android:id="@+id/bt_entrar"
+        android:id="@+id/bt_cadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/entrar"
+        android:text="Cadastrar"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:cornerRadius="10dp"
@@ -71,16 +79,15 @@
         />
 
     <TextView
-        android:id="@+id/txt_tela_cadastro"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cadastre-se Agora!"
-        android:textColor="@color/black"
-        android:textSize="28dp"
+        android:text="Coloque seu E-mail"
+        android:textColor="@color/red"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="20dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"/>
+        android:layout_gravity="center" />
+
 
 </LinearLayout>
