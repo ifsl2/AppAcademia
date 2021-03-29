@@ -79,9 +79,10 @@
         />
 
     <TextView
+        android:id="@+id/mensagem_erro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Coloque seu E-mail"
+        android:text=""
         android:textColor="@color/red"
         android:textSize="18dp"
         android:textStyle="bold"
