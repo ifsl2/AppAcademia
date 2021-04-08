@@ -1,23 +1,23 @@
 package com.example.appacademia
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.RadioButton
+import androidx.appcompat.app.AppCompatActivity
 import com.example.appacademia.databinding.ActivityFormCadastroBinding
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class FormCadastro : AppCompatActivity() {
 
-     private lateinit var  binding: ActivityFormCadastroBinding
+    internal lateinit var db:DBHelper
+
+    private lateinit var  binding: ActivityFormCadastroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormCadastroBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        db = DBHelper(this)
 
         supportActionBar!!.hide()
         toobar()
@@ -25,42 +25,31 @@ class FormCadastro : AppCompatActivity() {
         binding.btCadastrar.setOnClickListener {
             var email = binding.editEmail.text.toString()
             var senha = binding.editSenha.text.toString()
-            var msg_erro = binding.mensagemErro
-            if(email.isEmpty() || senha.isEmpty()){
-                msg_erro.setText("Preencha todos os campos!")
+            var professor = binding.rbProfessor.isChecked
+            var aluno = binding.rbAluno.isChecked
+            var msgErro = binding.mensagemErro
+            if(email.isEmpty() || senha.isEmpty() || (!professor && !aluno)){
+                msgErro.text = "Preencha todos os campos!"
             }else{
                 CadastrarUsuario()
             }
         }
-
     }
 
     private fun CadastrarUsuario(){
 
         var email = binding.editEmail.text.toString()
         var senha = binding.editSenha.text.toString()
-        var msg_erro = binding.mensagemErro
+        var rbGroup = binding.rbGroup
+        var msgErro = binding.mensagemErro
 
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha).addOnCompleteListener {
-            if(it.isSuccessful){
-                Toast.makeText(this, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show()
-                binding.editEmail.setText("")
-                binding.editSenha.setText("")
-                msg_erro.setText("")
-                RedirectLista()
-            }
-        }.addOnFailureListener {
+        val radioButton: RadioButton = findViewById(rbGroup.checkedRadioButtonId)
 
-            var erro = it
+        val usuario = Usuarios(binding.editEmail.text.toString(), binding.editSenha.text.toString(), radioButton.text.toString())
 
-            when{
-                erro is FirebaseAuthWeakPasswordException -> msg_erro.setText("Digite uma senha com seis ou mais caractéres")
-                erro is FirebaseAuthUserCollisionException -> msg_erro.setText("E-mail Cadastrado")
-                erro is FirebaseNetworkException -> msg_erro.setText("Sem conexão a internet")
-                else -> msg_erro.setText("Erro ao Cadastrar!")
-            }
+        db.adicionarUsuario(usuario, this, msgErro)
 
-        }
+        //redirectLista()
     }
 
     private fun toobar(){
@@ -69,7 +58,7 @@ class FormCadastro : AppCompatActivity() {
         toolbar.setNavigationIcon(getDrawable(R.drawable.ic_halteres))
     }
 
-    private fun RedirectLista(){
+    private fun redirectLista(){
         val intent = Intent(this, Lista::class.java)
         startActivity(intent)
         finish()

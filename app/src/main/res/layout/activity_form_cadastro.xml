@@ -63,6 +63,27 @@
         android:textColorHint="@color/white"
         android:textSize="18dp" />
 
+    <RadioGroup
+        android:id="@+id/rb_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb_professor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Professor" />
+
+        <RadioButton
+            android:id="@+id/rb_aluno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Aluno" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/bt_cadastrar"
         android:layout_width="match_parent"
