@@ -16,8 +16,6 @@ class Lista : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityListaBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -10,6 +10,8 @@ class FormCadastro : AppCompatActivity() {
 
     internal lateinit var db:DBHelper
 
+    val shPrefClass: SharedPreferencesClass = SharedPreferencesClass()
+
     private lateinit var  binding: ActivityFormCadastroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,8 @@ class FormCadastro : AppCompatActivity() {
 
         db.adicionarUsuario(usuario, this, msgErro)
 
-        //redirectLista()
+        shPrefClass.adicionarUsuario(this, usuario)
+        redirectLista()
     }
 
     private fun toobar(){
