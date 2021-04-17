@@ -18,6 +18,8 @@ class FormLogin : AppCompatActivity() {
 
     private lateinit var binding: ActivityFormLoginBinding
 
+    val shPrefClass: SharedPreferencesClass = SharedPreferencesClass()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormLoginBinding.inflate(layoutInflater)
@@ -54,6 +56,7 @@ class FormLogin : AppCompatActivity() {
             msgErro.text = usuario.toString()
             if (usuario != null) {
                 if (usuario.usuario == email && usuario.senha == MD5(senha)) {
+                    shPrefClass.adicionarUsuario(this, usuario)
                     RedirectLista()
                 } else {
                     Toast.makeText(this, "Usuario ou senha não coincidem!", Toast.LENGTH_SHORT).show()
@@ -63,23 +66,6 @@ class FormLogin : AppCompatActivity() {
                 Toast.makeText(this, "Usuário não existe!", Toast.LENGTH_SHORT).show()
             }
         }
-
-        /*
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha).addOnCompleteListener {
-            if(it.isSuccessful){
-                Toast.makeText(this, "Login Efetuado com Sucesso", Toast.LENGTH_SHORT).show()
-                RedirectLista()
-            }
-        }.addOnFailureListener {
-            var erro = it
-
-            when{
-                erro is FirebaseAuthInvalidCredentialsException -> msg_erro.setText("E-mail ou Senha estão incorretos")
-                erro is FirebaseNetworkException -> msg_erro.setText("Sem conexão a internet")
-                else -> msg_erro.setText("Erro ao Cadastrar!")
-            }
-        }
-        */
     }
 
     private fun VerificaUserLogado(){

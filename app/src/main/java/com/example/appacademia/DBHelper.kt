@@ -86,13 +86,43 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
     }
 
     companion object {
-        private const val BD_VERSAO = 2
+        private const val BD_VERSAO = 3
         private const val BD_NOME = "AppAcademia.db"
         private const val TABELA_USUARIOS = "usuarios"
+        private const val COLUNA_COD_US = "cod_usuario"
         private const val COLUNA_USUARIO = "usuario"
         private const val COLUNA_SENHA = "senha"
         private const val COLUNA_CATEGORIA = "categoria"
-        private const val SQL_CREATE_ENTRIES = "CREATE TABLE IF NOT EXISTS $TABELA_USUARIOS ($COLUNA_USUARIO TEXT PRIMARY KEY, $COLUNA_SENHA TEXT, $COLUNA_CATEGORIA TEXT);"
+
+        private const val TABELA_ATIVIDADES = "atividades"
+        private const val COLUNA_COD_ATIV = "cod_atividade"
+        private const val COLUNA_NOME = "nome"
+        private const val COLUNA_DESCRICAO = "descricao"
+
+        private const val TABELA_US_AT = "usuarios_atividades"
+        private const val COLUNA_COD_US_AT = "cod_us_at"
+        private const val COLUNA_REPETICOES = "repeticoes"
+        private const val COLUNA_DIAS = "dias"
+
+        private const val SQL_CREATE_ENTRIES =
+                "CREATE TABLE IF NOT EXISTS $TABELA_USUARIOS (" +
+                        "$COLUNA_COD_US INTEGER PRIMARY KEY, " +
+                        "$COLUNA_USUARIO TEXT, " +
+                        "$COLUNA_SENHA TEXT, " +
+                        "$COLUNA_CATEGORIA TEXT);" +
+                "CREATE TABLE IF NOT EXISTS $TABELA_ATIVIDADES (" +
+                        "$COLUNA_COD_ATIV INTEGER PRIMARY KEY, " +
+                        "$COLUNA_NOME TEXT, " +
+                        "$COLUNA_DESCRICAO TEXT);" +
+                "CREATE TABLE IF NOT EXISTS $TABELA_US_AT (" +
+                        "$COLUNA_COD_US_AT INTEGER PRIMARY KEY, " +
+                        "$COLUNA_REPETICOES INTEGER, " +
+                        "$COLUNA_DIAS TEXT, " +
+                        "$COLUNA_COD_US INTEGER NOT NULL, " +
+                        "$COLUNA_COD_ATIV INTEGER NOT NULL, " +
+                        "FOREIGN KEY ($COLUNA_COD_US) REFERENCES $TABELA_USUARIOS ($COLUNA_COD_US) ON UPDATE CASCADE ON DELETE CASCADE," +
+                        "FOREIGN KEY ($COLUNA_COD_ATIV) REFERENCES $TABELA_ATIVIDADES ($COLUNA_COD_ATIV) ON UPDATE CASCADE ON DELETE CASCADE);"
+
 
         private const val SQL_DELETE_ENTRIES = "DROP TABLE $TABELA_USUARIOS"
     }
