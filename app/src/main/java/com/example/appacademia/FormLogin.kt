@@ -14,12 +14,16 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class FormLogin : AppCompatActivity() {
 
+    internal lateinit var db:DBHelper
+
     private lateinit var binding: ActivityFormLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        db = DBHelper(this)
 
         supportActionBar!!.hide()
         VerificaUserLogado()
@@ -32,21 +36,35 @@ class FormLogin : AppCompatActivity() {
         binding.btEntrar.setOnClickListener {
             val email = binding.editEmail.text.toString()
             val senha = binding.editSenha.text.toString()
-            val msg_erro = binding.mensagemErro
+            val msgErro = binding.mensagemErro
             if(email.isEmpty() || senha.isEmpty()){
-                msg_erro.setText("Preencha todos os Campos!")
+                msgErro.text = "Preencha todos os Campos!"
             }else{
-                AuntenticarUser()
+                AuntenticarUsuario(email, senha)
             }
         }
     }
 
 
-    private fun AuntenticarUser(){
-        val email = binding.editEmail.text.toString()
-        val senha = binding.editSenha.text.toString()
-        val msg_erro = binding.mensagemErro
+    private fun AuntenticarUsuario(email:String, senha:String){
+        val msgErro = binding.mensagemErro
 
+        val usuario = db.recuperarUsuario(email)
+        usuario.let {
+            msgErro.text = usuario.toString()
+            if (usuario != null) {
+                if (usuario.usuario == email && usuario.senha == MD5(senha)) {
+                    RedirectLista()
+                } else {
+                    Toast.makeText(this, "Usuario ou senha não coincidem!", Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                Toast.makeText(this, "Usuário não existe!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /*
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha).addOnCompleteListener {
             if(it.isSuccessful){
                 Toast.makeText(this, "Login Efetuado com Sucesso", Toast.LENGTH_SHORT).show()
@@ -61,6 +79,7 @@ class FormLogin : AppCompatActivity() {
                 else -> msg_erro.setText("Erro ao Cadastrar!")
             }
         }
+        */
     }
 
     private fun VerificaUserLogado(){
