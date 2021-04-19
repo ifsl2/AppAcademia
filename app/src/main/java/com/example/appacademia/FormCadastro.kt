@@ -27,10 +27,12 @@ class FormCadastro : AppCompatActivity() {
         binding.btCadastrar.setOnClickListener {
             var email = binding.editEmail.text.toString()
             var senha = binding.editSenha.text.toString()
+            var nome = binding.editNome.text.toString()
+            var telefone = binding.editTelefone.text.toString()
             var professor = binding.rbProfessor.isChecked
             var aluno = binding.rbAluno.isChecked
             var msgErro = binding.mensagemErro
-            if(email.isEmpty() || senha.isEmpty() || (!professor && !aluno)){
+            if(email.isEmpty() || senha.isEmpty() || nome.isEmpty() || telefone.isEmpty() ||(!professor && !aluno)){
                 msgErro.text = "Preencha todos os campos!"
             }else{
                 CadastrarUsuario()
@@ -42,12 +44,14 @@ class FormCadastro : AppCompatActivity() {
 
         var email = binding.editEmail.text.toString()
         var senha = binding.editSenha.text.toString()
+        var nome = binding.editNome.text.toString()
+        var telefone = binding.editTelefone.text.toString()
         var rbGroup = binding.rbGroup
         var msgErro = binding.mensagemErro
 
         val radioButton: RadioButton = findViewById(rbGroup.checkedRadioButtonId)
 
-        val usuario = Usuarios(binding.editEmail.text.toString(), binding.editSenha.text.toString(), radioButton.text.toString())
+        val usuario = Usuarios(binding.editEmail.text.toString(), binding.editSenha.text.toString(), radioButton.text.toString(), nome, telefone)
 
         db.adicionarUsuario(usuario, this, msgErro)
 

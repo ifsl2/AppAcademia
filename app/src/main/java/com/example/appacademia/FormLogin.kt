@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.widget.Toast
 import com.example.appacademia.databinding.ActivityFormLoginBinding
 import com.google.firebase.FirebaseNetworkException
@@ -57,7 +58,11 @@ class FormLogin : AppCompatActivity() {
             if (usuario != null) {
                 if (usuario.usuario == email && usuario.senha == MD5(senha)) {
                     shPrefClass.adicionarUsuario(this, usuario)
-                    RedirectLista()
+                    if(usuario.categoria == "Professor"){
+                        RedirectListaProfessor()
+                    }else{
+                        RedirectLista()
+                    }
                 } else {
                     Toast.makeText(this, "Usuario ou senha não coincidem!", Toast.LENGTH_SHORT).show()
                 }
@@ -77,7 +82,13 @@ class FormLogin : AppCompatActivity() {
     }
 
     private fun RedirectLista(){
-        val intent = Intent(this, Lista::class.java)
+        val intent = Intent(this, MenuAluno::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun RedirectListaProfessor(){
+        val intent = Intent(this, MenuProfessor::class.java)
         startActivity(intent)
         finish()
     }

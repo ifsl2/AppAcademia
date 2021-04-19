@@ -1,3 +1,4 @@
+
 package com.example.appacademia
 
 import android.content.ContentValues
@@ -41,12 +42,28 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
             usuario = Usuarios(
                     c.getString(c.getColumnIndex(COLUNA_USUARIO)),
                     c.getString(c.getColumnIndex(COLUNA_SENHA)),
-                    c.getString(c.getColumnIndex(COLUNA_CATEGORIA))
+                    c.getString(c.getColumnIndex(COLUNA_CATEGORIA)),
+                    c.getString(c.getColumnIndex(COLUNA_NOME_USER)),
+                    c.getString(c.getColumnIndex(COLUNA_TELEFONE))
             )
         }
 
         return usuario
 
+    }
+
+    fun readUsuario() : Cursor
+    {
+        val db:SQLiteDatabase = this.writableDatabase
+        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Professor'",null)
+        return read
+    }
+
+    fun readAlunos() : Cursor
+    {
+        val db:SQLiteDatabase = this.writableDatabase
+        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Aluno'",null)
+        return read
     }
 
     fun adicionarUsuario(usuario: Usuarios, context: Context, msgErro:TextView){
@@ -65,6 +82,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
             values.put(COLUNA_USUARIO, usuario.usuario)
             values.put(COLUNA_SENHA, usuario.senha?.let { MD5(it) })
             values.put(COLUNA_CATEGORIA, usuario.categoria)
+            values.put(COLUNA_NOME_USER, usuario.nome)
+            values.put(COLUNA_TELEFONE, usuario.telefone)
             db.insert(TABELA_USUARIOS, null, values)
             db.close()
             Toast.makeText(context, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show()
@@ -85,14 +104,33 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         return db.update(TABELA_USUARIOS, values, "$COLUNA_USUARIO=?", arrayOf(usuario.codigo.toString()))
     }
 
+    fun adicionarAtividade(nome: String, descricao: String, context: Context){
+        val db : SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUNA_NOME, nome)
+        contentValues.put(COLUNA_DESCRICAO, descricao)
+        val insert_data = db.insert(TABELA_ATIVIDADES, null, contentValues)
+        db.close()
+        Toast.makeText(context, "Atividade cadastrado com sucesso", Toast.LENGTH_SHORT).show()
+    }
+
+    fun readAtividade() : Cursor
+    {
+        val db:SQLiteDatabase = this.writableDatabase
+        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_ATIVIDADES",null)
+        return read
+    }
+
     companion object {
-        private const val BD_VERSAO = 3
+        private const val BD_VERSAO = 5
         private const val BD_NOME = "AppAcademia.db"
         private const val TABELA_USUARIOS = "usuarios"
         private const val COLUNA_COD_US = "cod_usuario"
         private const val COLUNA_USUARIO = "usuario"
         private const val COLUNA_SENHA = "senha"
         private const val COLUNA_CATEGORIA = "categoria"
+        private const val COLUNA_NOME_USER = "nome"
+        private const val COLUNA_TELEFONE = "telefone"
 
         private const val TABELA_ATIVIDADES = "atividades"
         private const val COLUNA_COD_ATIV = "cod_atividade"
@@ -109,6 +147,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
                         "$COLUNA_COD_US INTEGER PRIMARY KEY, " +
                         "$COLUNA_USUARIO TEXT, " +
                         "$COLUNA_SENHA TEXT, " +
+                        "$COLUNA_NOME_USER TEXT," +
+                        "$COLUNA_TELEFONE TEXT," +
                         "$COLUNA_CATEGORIA TEXT);" +
                 "CREATE TABLE IF NOT EXISTS $TABELA_ATIVIDADES (" +
                         "$COLUNA_COD_ATIV INTEGER PRIMARY KEY, " +

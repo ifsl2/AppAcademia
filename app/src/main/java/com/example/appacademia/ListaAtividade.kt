@@ -5,24 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.get
-import com.example.appacademia.databinding.ActivityListaBinding
+import com.example.appacademia.databinding.ActivityListaAlunosBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class Lista : AppCompatActivity() {
-
+class ListaAtividade : AppCompatActivity() {
     internal lateinit var db:DBHelper
     lateinit var result : TextView
-    private var listNotes = ArrayList<String>()
-    private lateinit var binding: ActivityListaBinding
-
+    private lateinit var binding: ActivityListaAlunosBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityListaBinding.inflate(layoutInflater)
+        binding = ActivityListaAlunosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         db = DBHelper(this)
@@ -30,7 +24,6 @@ class Lista : AppCompatActivity() {
 
 
         readDataFunction()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,14 +46,13 @@ class Lista : AppCompatActivity() {
     }
 
     private fun readDataFunction(){
-        val data = db.readUsuario()
+        val data = db.readAtividade()
         val stringBuffer = StringBuffer()
 
         if(data != null && data.count >0){
             while(data.moveToNext()){
-                stringBuffer.append("Nome: ${data.getString(3)}\n")
-                stringBuffer.append("Telefone: ${data.getString(4)}\n")
-                stringBuffer.append("E-mail: ${data.getString(1)}\n\n")
+                stringBuffer.append("Nome: ${data.getString(0)}\n")
+                stringBuffer.append("Descrição: ${data.getString(1)}\n\n")
             }
             result.text = stringBuffer.toString()
             Toast.makeText(applicationContext,"Data carregada!", Toast.LENGTH_LONG).show()

@@ -5,24 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.get
-import com.example.appacademia.databinding.ActivityListaBinding
+import com.example.appacademia.databinding.ActivityListaAlunosBinding
+import com.example.appacademia.databinding.ActivityMenuAlunoBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class Lista : AppCompatActivity() {
-
+class ListaAlunos : AppCompatActivity() {
     internal lateinit var db:DBHelper
     lateinit var result : TextView
-    private var listNotes = ArrayList<String>()
-    private lateinit var binding: ActivityListaBinding
-
+    private lateinit var binding: ActivityListaAlunosBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityListaBinding.inflate(layoutInflater)
+        binding = ActivityListaAlunosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         db = DBHelper(this)
@@ -53,7 +48,7 @@ class Lista : AppCompatActivity() {
     }
 
     private fun readDataFunction(){
-        val data = db.readUsuario()
+        val data = db.readAlunos()
         val stringBuffer = StringBuffer()
 
         if(data != null && data.count >0){
@@ -78,3 +73,5 @@ class Lista : AppCompatActivity() {
         finish()
     }
 }
+
+
