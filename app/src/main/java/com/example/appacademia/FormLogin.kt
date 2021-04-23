@@ -37,13 +37,17 @@ class FormLogin : AppCompatActivity() {
         }
 
         binding.btEntrar.setOnClickListener {
-            val email = binding.editEmail.text.toString()
-            val senha = binding.editSenha.text.toString()
-            val msgErro = binding.mensagemErro
-            if(email.isEmpty() || senha.isEmpty()){
-                msgErro.text = "Preencha todos os Campos!"
-            }else{
-                AuntenticarUsuario(email, senha)
+            try {
+                val email = binding.editEmail.text.toString()
+                val senha = binding.editSenha.text.toString()
+                val msgErro = binding.mensagemErro
+                if (email.isEmpty() || senha.isEmpty()) {
+                    msgErro.text = "Preencha todos os Campos!"
+                } else {
+                    AuntenticarUsuario(email, senha)
+                }
+            } catch (ex: Exception) {
+                Toast.makeText(applicationContext, ex.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
