@@ -17,8 +17,14 @@ class MenuProfessor : AppCompatActivity() {
 
         var btn = binding.listaUser
         var btnAtividade = binding.atividade
+        var btnAtividades = binding.atividades
         btn.setOnClickListener {
             RedirectListUser()
+        }
+        btnAtividades.setOnClickListener {
+            val intent = Intent(this, ListaAtividade::class.java)
+            startActivity(intent)
+            finish()
         }
         btnAtividade.setOnClickListener {
             val intent = Intent(this, CriarAtividade::class.java)
