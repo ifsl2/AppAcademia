@@ -1,29 +1,46 @@
 package com.example.appacademia
 
 import android.content.Intent
+import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
-import com.example.appacademia.databinding.ActivityListaAlunosBinding
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.appacademia.databinding.ActivityListaAtividadeBinding
 import com.google.firebase.auth.FirebaseAuth
+import java.lang.Exception
 
 class ListaAtividade : AppCompatActivity() {
     internal lateinit var db:DBHelper
-    lateinit var result : TextView
-    private lateinit var binding: ActivityListaAlunosBinding
+    private lateinit var binding: ActivityListaAtividadeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityListaAlunosBinding.inflate(layoutInflater)
+        binding = ActivityListaAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         db = DBHelper(this)
-        result = binding.resultText
 
+        var atividades = readDataFunction()
 
-        readDataFunction()
+        binding.voltar.setOnClickListener {
+            val intent = Intent(this, MenuProfessor::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        var recyclerViewAtividades = binding.recViewAtividades
+
+        recyclerViewAtividades.apply {
+            layoutManager = LinearLayoutManager(this@ListaAtividade)
+            addItemDecoration(DividerItemDecoration(this@ListaAtividade, DividerItemDecoration.VERTICAL))
+            adapter = AtividadesAdapter(atividades, layoutInflater)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,21 +62,28 @@ class ListaAtividade : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun readDataFunction(){
-        val data = db.readAtividade()
-        val stringBuffer = StringBuffer()
+    private fun readDataFunction() : ArrayList<Atividades>{
+        val atividades: ArrayList<Atividades> = ArrayList()
+        try {
+            val data: Cursor = db.readAtividade()
 
-        if(data != null && data.count >0){
-            while(data.moveToNext()){
-                stringBuffer.append("Nome: ${data.getString(0)}\n")
-                stringBuffer.append("Descrição: ${data.getString(1)}\n\n")
+            if (data != null && data.count > 0) {
+                if (data.moveToFirst()) {
+                    do {
+                        val atv = Atividades(data.getString(0).toInt(), data.getString(1), data.getString(2))
+                        atividades.add(atv)
+                    } while (data.moveToNext())
+                }
+                Toast.makeText(applicationContext, "Data carregada!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(applicationContext, "No Data", Toast.LENGTH_LONG).show()
             }
-            result.text = stringBuffer.toString()
-            Toast.makeText(applicationContext,"Data carregada!", Toast.LENGTH_LONG).show()
-        }else{
-            Toast.makeText(applicationContext,"No Data", Toast.LENGTH_LONG).show()
+        }
+        catch (ex: Exception) {
+            Toast.makeText(applicationContext, ex.toString(), Toast.LENGTH_LONG).show()
         }
 
+        return atividades
     }
 
 
