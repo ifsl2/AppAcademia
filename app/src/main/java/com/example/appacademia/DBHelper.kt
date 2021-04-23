@@ -4,21 +4,23 @@ package com.example.appacademia
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_VERSAO) {
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(SQL_CREATE_ENTRIES)
+        db?.execSQL(QUERY_USUARIO)
+        db?.execSQL(QUERY_ATIVIDADES)
+        db?.execSQL(QUERY_US_AT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL(SQL_DELETE_ENTRIES)
+        db?.execSQL(QUERY_DELETE_USUARIOS)
+        db?.execSQL(QUERY_DELETE_ATIVIDADES)
+        db?.execSQL(QUERY_DELETE_US_AT)
         onCreate(db)
     }
 
@@ -52,18 +54,16 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
 
     }
 
-    fun readUsuario() : Cursor
+    fun readProfessor() : Cursor
     {
         val db:SQLiteDatabase = this.writableDatabase
-        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Professor'",null)
-        return read
+        return db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Professor'", arrayOf())
     }
 
     fun readAlunos() : Cursor
     {
         val db:SQLiteDatabase = this.writableDatabase
-        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Aluno'",null)
-        return read
+        return db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Aluno'", arrayOf())
     }
 
     fun adicionarUsuario(usuario: Usuarios, context: Context, msgErro:TextView){
@@ -109,20 +109,24 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         val contentValues = ContentValues()
         contentValues.put(COLUNA_NOME, nome)
         contentValues.put(COLUNA_DESCRICAO, descricao)
-        val insert_data = db.insert(TABELA_ATIVIDADES, null, contentValues)
+        val inserted = db.insert(TABELA_ATIVIDADES, null, contentValues)
         db.close()
-        Toast.makeText(context, "Atividade cadastrado com sucesso", Toast.LENGTH_SHORT).show()
+        if (inserted != (-1).toLong()) {
+            Toast.makeText(context, "Atividade cadastrado com sucesso", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Falha ao cadastrar atividade", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     fun readAtividade() : Cursor
     {
-        val db:SQLiteDatabase = this.writableDatabase
-        val read : Cursor = db.rawQuery("SELECT * FROM $TABELA_ATIVIDADES",null)
-        return read
+        val db:SQLiteDatabase = this.readableDatabase
+        return db.rawQuery("SELECT * FROM $TABELA_ATIVIDADES", arrayOf())
     }
 
     companion object {
-        private const val BD_VERSAO = 5
+        private const val BD_VERSAO = 7
         private const val BD_NOME = "AppAcademia.db"
         private const val TABELA_USUARIOS = "usuarios"
         private const val COLUNA_COD_US = "cod_usuario"
@@ -131,6 +135,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         private const val COLUNA_CATEGORIA = "categoria"
         private const val COLUNA_NOME_USER = "nome"
         private const val COLUNA_TELEFONE = "telefone"
+        private const val COLUNA_IDADE = "idade"
 
         private const val TABELA_ATIVIDADES = "atividades"
         private const val COLUNA_COD_ATIV = "cod_atividade"
@@ -142,28 +147,31 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         private const val COLUNA_REPETICOES = "repeticoes"
         private const val COLUNA_DIAS = "dias"
 
-        private const val SQL_CREATE_ENTRIES =
-                "CREATE TABLE IF NOT EXISTS $TABELA_USUARIOS (" +
-                        "$COLUNA_COD_US INTEGER PRIMARY KEY, " +
-                        "$COLUNA_USUARIO TEXT, " +
-                        "$COLUNA_SENHA TEXT, " +
-                        "$COLUNA_NOME_USER TEXT," +
-                        "$COLUNA_TELEFONE TEXT," +
-                        "$COLUNA_CATEGORIA TEXT);" +
-                "CREATE TABLE IF NOT EXISTS $TABELA_ATIVIDADES (" +
-                        "$COLUNA_COD_ATIV INTEGER PRIMARY KEY, " +
-                        "$COLUNA_NOME TEXT, " +
-                        "$COLUNA_DESCRICAO TEXT);" +
-                "CREATE TABLE IF NOT EXISTS $TABELA_US_AT (" +
-                        "$COLUNA_COD_US_AT INTEGER PRIMARY KEY, " +
-                        "$COLUNA_REPETICOES INTEGER, " +
-                        "$COLUNA_DIAS TEXT, " +
-                        "$COLUNA_COD_US INTEGER NOT NULL, " +
-                        "$COLUNA_COD_ATIV INTEGER NOT NULL, " +
-                        "FOREIGN KEY ($COLUNA_COD_US) REFERENCES $TABELA_USUARIOS ($COLUNA_COD_US) ON UPDATE CASCADE ON DELETE CASCADE," +
-                        "FOREIGN KEY ($COLUNA_COD_ATIV) REFERENCES $TABELA_ATIVIDADES ($COLUNA_COD_ATIV) ON UPDATE CASCADE ON DELETE CASCADE);"
+        private const val QUERY_USUARIO = "CREATE TABLE IF NOT EXISTS $TABELA_USUARIOS (" +
+                "$COLUNA_COD_US INTEGER PRIMARY KEY, " +
+                "$COLUNA_USUARIO TEXT, " +
+                "$COLUNA_SENHA TEXT, " +
+                "$COLUNA_NOME_USER TEXT," +
+                "$COLUNA_TELEFONE TEXT," +
+                "$COLUNA_IDADE INTEGER," +
+                "$COLUNA_CATEGORIA TEXT);"
 
+        private const val QUERY_ATIVIDADES = "CREATE TABLE IF NOT EXISTS $TABELA_ATIVIDADES (" +
+                "$COLUNA_COD_ATIV INTEGER PRIMARY KEY, " +
+                "$COLUNA_NOME TEXT, " +
+                "$COLUNA_DESCRICAO TEXT);"
 
-        private const val SQL_DELETE_ENTRIES = "DROP TABLE $TABELA_USUARIOS"
+        private const val QUERY_US_AT = "CREATE TABLE IF NOT EXISTS $TABELA_US_AT (" +
+                "$COLUNA_COD_US_AT INTEGER PRIMARY KEY, " +
+                "$COLUNA_REPETICOES INTEGER, " +
+                "$COLUNA_DIAS TEXT, " +
+                "$COLUNA_COD_US INTEGER NOT NULL, " +
+                "$COLUNA_COD_ATIV INTEGER NOT NULL, " +
+                "FOREIGN KEY ($COLUNA_COD_US) REFERENCES $TABELA_USUARIOS ($COLUNA_COD_US) ON UPDATE CASCADE ON DELETE CASCADE," +
+                "FOREIGN KEY ($COLUNA_COD_ATIV) REFERENCES $TABELA_ATIVIDADES ($COLUNA_COD_ATIV) ON UPDATE CASCADE ON DELETE CASCADE);"
+
+        private const val QUERY_DELETE_USUARIOS = "DROP TABLE IF EXISTS $TABELA_USUARIOS"
+        private const val QUERY_DELETE_ATIVIDADES = "DROP TABLE IF EXISTS $TABELA_ATIVIDADES"
+        private const val QUERY_DELETE_US_AT = "DROP TABLE IF EXISTS $TABELA_US_AT"
     }
 }
