@@ -19,8 +19,6 @@ class FormLogin : AppCompatActivity() {
 
     private lateinit var binding: ActivityFormLoginBinding
 
-    val shPrefClass: SharedPreferencesClass = SharedPreferencesClass()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFormLoginBinding.inflate(layoutInflater)
@@ -29,7 +27,6 @@ class FormLogin : AppCompatActivity() {
         db = DBHelper(this)
 
         supportActionBar!!.hide()
-        VerificaUserLogado()
 
         binding.txtTelaCadastro.setOnClickListener {
             val intent = Intent(this, FormCadastro::class.java)
@@ -61,11 +58,10 @@ class FormLogin : AppCompatActivity() {
             msgErro.text = usuario.toString()
             if (usuario != null) {
                 if (usuario.usuario == email && usuario.senha == MD5(senha)) {
-                    shPrefClass.adicionarUsuario(this, usuario)
                     if(usuario.categoria == "Professor"){
-                        RedirectListaProfessor()
+                        RedirectListaProfessor(usuario.codigo)
                     }else{
-                        RedirectLista()
+                        RedirectLista(usuario.codigo)
                     }
                 } else {
                     Toast.makeText(this, "Usuario ou senha não coincidem!", Toast.LENGTH_SHORT).show()
@@ -77,22 +73,16 @@ class FormLogin : AppCompatActivity() {
         }
     }
 
-    private fun VerificaUserLogado(){
-        val usuario = FirebaseAuth.getInstance().currentUser
-
-        if(usuario != null){
-            RedirectLista()
-        }
-    }
-
-    private fun RedirectLista(){
+    private fun RedirectLista(codAluno: Long){
         val intent = Intent(this, MenuAluno::class.java)
+        intent.putExtra("COD_ALUNO", codAluno)
         startActivity(intent)
         finish()
     }
 
-    private fun RedirectListaProfessor(){
+    private fun RedirectListaProfessor(codProfessor: Long){
         val intent = Intent(this, MenuProfessor::class.java)
+        intent.putExtra("COD_PROFESSOR", codProfessor)
         startActivity(intent)
         finish()
     }

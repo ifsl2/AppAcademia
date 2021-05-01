@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppAcademia">
-        <activity android:name=".ListaAtividade"></activity>
+        <activity android:name=".FormCadastro2"></activity>
+        <activity android:name=".DetalhesUsuario" />
+        <activity android:name=".ListaAtividade" />
         <activity android:name=".CriarAtividade" />
         <activity android:name=".ListaAlunos" />
         <activity android:name=".MenuProfessor" />

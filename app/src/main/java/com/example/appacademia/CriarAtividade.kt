@@ -3,18 +3,22 @@ package com.example.appacademia
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.RadioButton
 import com.example.appacademia.databinding.ActivityCriarAtividadeBinding
 
 class CriarAtividade : AppCompatActivity() {
     internal lateinit var db:DBHelper
-    val shPrefClass: SharedPreferencesClass = SharedPreferencesClass()
     private lateinit var  binding: ActivityCriarAtividadeBinding
+    private var codProfessor: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCriarAtividadeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.extras != null)
+        {
+            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+        }
 
         db = DBHelper(this)
 
@@ -32,6 +36,7 @@ class CriarAtividade : AppCompatActivity() {
 
         binding.voltar.setOnClickListener{
             val intent = Intent(this, MenuProfessor::class.java)
+            intent.putExtra("CODIGO_PROFESSOR", codProfessor)
             startActivity(intent)
             finish()
         }
@@ -43,7 +48,7 @@ class CriarAtividade : AppCompatActivity() {
         var descricao = binding.editDescricao.text.toString()
         var msgErro = binding.mensagemErro
 
-        db.adicionarAtividade(nome,descricao, this)
+        db.adicionarAtividade(nome, descricao, codProfessor.toString(), this)
 
     }
 }

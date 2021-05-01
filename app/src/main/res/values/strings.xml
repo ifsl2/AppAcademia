@@ -2,5 +2,13 @@
     <string name="app_name">AppAcademia</string>
     <string name="entrar">Entrar</string>
     <string name="Profissionais">profissionais</string>
-    <string name="Alunos" />
+    <string name="Alunos">Alunos</string>
+    <string name="Professores">Professores</string>
+    <string name="Criar_Atvidade">Criar Atividade</string>
+    <string name="Atividades">Atividades</string>
+    <string name="Proximo">Proximo</string>
+    <string name="Cadastrar">Cadastrar</string>
+    <string name="Finalizar">Finalizar</string>
+    <string name="Criar_Conta">Criar conta</string>
+    <string name="Voltar">Voltar</string>
 </resources>

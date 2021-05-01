@@ -9,10 +9,10 @@
     tools:context=".MenuAluno">
 
     <Button
-        android:id="@+id/listaUser"
+        android:id="@+id/listaAtiv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Profissionais"
+        android:text="@string/Atividades"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:cornerRadius="10dp"
@@ -22,5 +22,19 @@
         android:layout_marginTop="30dp"
         android:padding="15dp"
         />
+
+    <Button
+        android:id="@+id/listaUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/black"
+        android:padding="15dp"
+        android:text="@string/Professores"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:cornerRadius="10dp" />
 
 </LinearLayout>

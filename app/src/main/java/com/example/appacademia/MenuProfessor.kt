@@ -10,10 +10,16 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MenuProfessor : AppCompatActivity() {
     private lateinit var binding: ActivityMenuProfessorBinding
+    private var codProfessor: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuProfessorBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (intent.extras != null)
+        {
+            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+        }
+
 
         var btn = binding.listaUser
         var btnAtividade = binding.atividade
@@ -23,11 +29,13 @@ class MenuProfessor : AppCompatActivity() {
         }
         btnAtividades.setOnClickListener {
             val intent = Intent(this, ListaAtividade::class.java)
+            intent.putExtra("COD_PROFESSOR", codProfessor)
             startActivity(intent)
             finish()
         }
         btnAtividade.setOnClickListener {
             val intent = Intent(this, CriarAtividade::class.java)
+            intent.putExtra("COD_PROFESSOR", codProfessor)
             startActivity(intent)
             finish()
         }
@@ -63,6 +71,8 @@ class MenuProfessor : AppCompatActivity() {
 
     private fun RedirectListUser(){
         val intent = Intent(this, ListaAlunos::class.java)
+        intent.putExtra("COD_PROFESSOR", codProfessor)
+        intent.putExtra("TIPO_USUARIO", "PROFESSOR")
         startActivity(intent)
         finish()
     }

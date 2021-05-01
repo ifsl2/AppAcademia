@@ -8,6 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appacademia.databinding.ActivityListaAlunosBinding
 import com.example.appacademia.databinding.ActivityMenuAlunoBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -15,21 +17,24 @@ import java.lang.Exception
 
 class ListaAlunos : AppCompatActivity() {
     internal lateinit var db:DBHelper
-    lateinit var result : TextView
+    private var tipo: String = ""
+    private var codUsuario: Long = 0
     private lateinit var binding: ActivityListaAlunosBinding
-    private var shPref: SharedPreferencesClass = SharedPreferencesClass()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaAlunosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (intent.extras != null) {
+            tipo = intent.extras!!.getString("TIPO_USUARIO").toString()
+            codUsuario = intent.extras!!.getLong("COD_USUARIO")
+        }
+
         db = DBHelper(this)
-        result = binding.resultText
 
         binding.voltar.setOnClickListener {
             var intent: Intent? = null
-            var tipo = shPref.recuperarUsuario(this)["tipo"]
-            intent = if (tipo == "Professor") {
+            intent = if (tipo == "PROFESSOR") {
                 Intent(this, MenuProfessor::class.java)
             } else {
                 Intent(this, MenuAluno::class.java)
@@ -38,7 +43,15 @@ class ListaAlunos : AppCompatActivity() {
             finish()
         }
 
-        readDataFunction()
+        var result = readDataFunction()
+
+        var recyclerViewLista = binding.recViewAlunos
+
+        recyclerViewLista.apply {
+            layoutManager = LinearLayoutManager(this@ListaAlunos)
+            addItemDecoration(DividerItemDecoration(this@ListaAlunos, DividerItemDecoration.VERTICAL))
+            adapter = AlunosAdapter(result, layoutInflater)
+        }
 
     }
 
@@ -64,12 +77,16 @@ class ListaAlunos : AppCompatActivity() {
     private fun readDataFunction() : ArrayList<Alunos>{
         val alunos: ArrayList<Alunos> = ArrayList()
         try {
-            val data: Cursor = db.readAlunos()
+            var data: Cursor = db.readProfessores()
+            if (tipo == "PROFESSOR") {
+                data = db.readAlunosProfessor(codUsuario.toString())
+            }
+
 
             if (data != null && data.count > 0) {
                 if (data.moveToFirst()) {
                     do {
-                        val al = Alunos(data.getString(0).toInt(), data.getString(1), 0)
+                        val al = Alunos(data.getInt(0), data.getString(1), data.getInt(5), data.getString(4))
                         alunos.add(al)
                     } while (data.moveToNext())
                 }

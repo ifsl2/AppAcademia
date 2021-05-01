@@ -1,8 +1,10 @@
 package com.example.appacademia
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appacademia.databinding.LinhaAlunoBinding
 import com.example.appacademia.databinding.LinhaBinding
 
 class AlunosAdapter(private val alunos: ArrayList<Alunos>,
@@ -11,8 +13,8 @@ class AlunosAdapter(private val alunos: ArrayList<Alunos>,
     override fun getItemCount(): Int = alunos.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlunoViewHolder {
-        val binding = LinhaBinding.inflate(inflater, parent, false)
-        return AlunoViewHolder(binding)
+        val binding = LinhaAlunoBinding.inflate(inflater, parent, false)
+        return AlunoViewHolder(binding, parent.context as Activity)
     }
 
     override fun onBindViewHolder(holder: AlunoViewHolder, position: Int) {

@@ -11,10 +11,16 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MenuAluno : AppCompatActivity() {
     private lateinit var binding: ActivityMenuAlunoBinding
+    private var codAluno: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuAlunoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.extras != null)
+        {
+            codAluno = intent.extras!!.getLong("COD_ALUNO")
+        }
 
         var btn = binding.listaUser
         btn.setOnClickListener {
@@ -30,7 +36,9 @@ class MenuAluno : AppCompatActivity() {
     }
 
     private fun RedirectListUser(){
-        val intent = Intent(this, Lista::class.java)
+        val intent = Intent(this, ListaAlunos::class.java)
+        intent.putExtra("TIPO_USUARIO", "ALUNO")
+        intent.putExtra("COD_USUARIO", codAluno)
         startActivity(intent)
         finish()
     }
