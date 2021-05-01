@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appacademia.databinding.ActivityListaAtividadeBinding
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
+import kotlin.properties.Delegates
 
 class ListaAtividade : AppCompatActivity() {
     internal lateinit var db:DBHelper
     private lateinit var binding: ActivityListaAtividadeBinding
+    private var codProfessor: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaAtividadeBinding.inflate(layoutInflater)
@@ -25,10 +27,16 @@ class ListaAtividade : AppCompatActivity() {
 
         db = DBHelper(this)
 
+        if (intent.extras != null)
+        {
+            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+        }
+
         var atividades = readDataFunction()
 
         binding.voltar.setOnClickListener {
             val intent = Intent(this, MenuProfessor::class.java)
+            intent.putExtra("CODIGO_PROFESSOR", codProfessor)
             startActivity(intent)
             finish()
         }
@@ -65,7 +73,7 @@ class ListaAtividade : AppCompatActivity() {
     private fun readDataFunction() : ArrayList<Atividades>{
         val atividades: ArrayList<Atividades> = ArrayList()
         try {
-            val data: Cursor = db.readAtividade()
+            val data: Cursor = db.readAtividade(codProfessor.toString())
 
             if (data != null && data.count > 0) {
                 if (data.moveToFirst()) {

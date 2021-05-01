@@ -18,18 +18,18 @@
         android:layout_height="wrap_content"
         android:text="Informe os dados abaixo para se cadastar"
         android:textColor="@color/black"
-        android:textSize="19dp"
+        android:textSize="15dp"
         android:textStyle="bold"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cria sua conta"
+        android:text="@string/Criar_Conta"
         android:textColor="@color/black"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"/>
 
     <EditText
         android:id="@+id/edit_nome"
@@ -42,7 +42,23 @@
         android:hint="Nome"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        android:padding="20dp"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="18dp" />
+
+    <EditText
+        android:id="@+id/edit_idade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/edit_text_login"
+        android:hint="Idade"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="18dp" />
@@ -58,7 +74,7 @@
         android:hint="Telefone"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        android:padding="20dp"
+        android:padding="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="18dp" />
@@ -74,7 +90,7 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        android:padding="20dp"
+        android:padding="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="18dp" />
@@ -90,7 +106,7 @@
         android:hint="Senha"
         android:inputType="textPassword"
         android:maxLines="1"
-        android:padding="20dp"
+        android:padding="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="18dp" />
@@ -122,7 +138,7 @@
         android:id="@+id/bt_cadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cadastrar"
+        android:text="@string/Cadastrar"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:cornerRadius="10dp"

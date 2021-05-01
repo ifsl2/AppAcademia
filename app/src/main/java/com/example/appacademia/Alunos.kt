@@ -1,4 +1,4 @@
 package com.example.appacademia
 
-data class Alunos(val id: Int, val nome: String, val idade: Int) {
+data class Alunos(val id: Int, val nome: String, val idade: Int, val telefone: String) {
 }

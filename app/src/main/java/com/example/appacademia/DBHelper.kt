@@ -48,33 +48,45 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
                     c.getString(c.getColumnIndex(COLUNA_NOME_USER)),
                     c.getString(c.getColumnIndex(COLUNA_TELEFONE))
             )
+            usuario.codigo = c.getString(c.getColumnIndex(COLUNA_COD_US)).toLong()
         }
 
         return usuario
 
     }
 
-    fun readProfessor() : Cursor
+    fun readUsuario() : Cursor
     {
-        val db:SQLiteDatabase = this.writableDatabase
+        val db:SQLiteDatabase = this.readableDatabase
+        return db.rawQuery("SELECT * FROM $TABELA_USUARIOS", arrayOf())
+    }
+
+    fun readProfessores() : Cursor
+    {
+        val db:SQLiteDatabase = this.readableDatabase
         return db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Professor'", arrayOf())
+    }
+
+    fun readAlunosProfessor(codProfessor: String) : Cursor {
+        val db:SQLiteDatabase = this.readableDatabase
+        return db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_COD_PROF = ?", arrayOf(codProfessor))
     }
 
     fun readAlunos() : Cursor
     {
-        val db:SQLiteDatabase = this.writableDatabase
+        val db:SQLiteDatabase = this.readableDatabase
         return db.rawQuery("SELECT * FROM $TABELA_USUARIOS WHERE $COLUNA_CATEGORIA = 'Aluno'", arrayOf())
     }
 
-    fun adicionarUsuario(usuario: Usuarios, context: Context, msgErro:TextView){
+    fun adicionarUsuario(usuario: Usuarios, context: Context) : Long{
+        var rowID: Long = -1
         try {
             val checkUsuario = recuperarUsuario(usuario.usuario)
             Log.i("USUARIO", checkUsuario.toString())
             checkUsuario?.let {
-                msgErro.text = checkUsuario.toString()
                 if (checkUsuario.usuario == usuario.usuario) {
                     Toast.makeText(context, "Usuário ja cadastrado", Toast.LENGTH_SHORT).show()
-                    return
+                    return -1
                 }
             }
             val db:SQLiteDatabase = this.writableDatabase
@@ -84,13 +96,27 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
             values.put(COLUNA_CATEGORIA, usuario.categoria)
             values.put(COLUNA_NOME_USER, usuario.nome)
             values.put(COLUNA_TELEFONE, usuario.telefone)
-            db.insert(TABELA_USUARIOS, null, values)
+            rowID = db.insert(TABELA_USUARIOS, null, values)
             db.close()
             Toast.makeText(context, "Usuário cadastrado com sucesso", Toast.LENGTH_SHORT).show()
         } catch (ex: Exception) {
             Toast.makeText(context, ex.toString(), Toast.LENGTH_SHORT).show()
         }
 
+        return rowID
+
+    }
+
+    fun adicionarProfessorAluno(codAluno: String, codProfessor: String, context: Context): Int {
+        try {
+            val db: SQLiteDatabase = this.writableDatabase
+            val values = ContentValues()
+            values.put(COLUNA_COD_PROF, codProfessor)
+            return db.update(TABELA_USUARIOS, values, "$COLUNA_COD_US = ?", arrayOf(codAluno))
+        } catch (ex: Exception) {
+            Toast.makeText(context, ex.toString(), Toast.LENGTH_LONG).show()
+        }
+        return 0
     }
 
     fun atualizarUsuario(usuario: Usuarios): Int{
@@ -104,11 +130,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         return db.update(TABELA_USUARIOS, values, "$COLUNA_USUARIO=?", arrayOf(usuario.codigo.toString()))
     }
 
-    fun adicionarAtividade(nome: String, descricao: String, context: Context){
+    fun adicionarAtividade(nome: String, descricao: String, codProfessor: String?, context: Context){
         val db : SQLiteDatabase = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUNA_NOME, nome)
         contentValues.put(COLUNA_DESCRICAO, descricao)
+        contentValues.put(COLUNA_COD_PROF, codProfessor)
         val inserted = db.insert(TABELA_ATIVIDADES, null, contentValues)
         db.close()
         if (inserted != (-1).toLong()) {
@@ -119,14 +146,20 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
 
     }
 
-    fun readAtividade() : Cursor
+    fun readAtividade(idProfessor: String) : Cursor
+    {
+        val db:SQLiteDatabase = this.readableDatabase
+        return db.rawQuery("SELECT * FROM $TABELA_ATIVIDADES WHERE cod_professor = ?", arrayOf(idProfessor))
+    }
+
+    fun readAtividades() : Cursor
     {
         val db:SQLiteDatabase = this.readableDatabase
         return db.rawQuery("SELECT * FROM $TABELA_ATIVIDADES", arrayOf())
     }
 
     companion object {
-        private const val BD_VERSAO = 7
+        private const val BD_VERSAO = 9
         private const val BD_NOME = "AppAcademia.db"
         private const val TABELA_USUARIOS = "usuarios"
         private const val COLUNA_COD_US = "cod_usuario"
@@ -139,6 +172,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
 
         private const val TABELA_ATIVIDADES = "atividades"
         private const val COLUNA_COD_ATIV = "cod_atividade"
+        private const val COLUNA_COD_PROF = "cod_professor"
         private const val COLUNA_NOME = "nome"
         private const val COLUNA_DESCRICAO = "descricao"
 
@@ -154,12 +188,16 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
                 "$COLUNA_NOME_USER TEXT," +
                 "$COLUNA_TELEFONE TEXT," +
                 "$COLUNA_IDADE INTEGER," +
-                "$COLUNA_CATEGORIA TEXT);"
+                "$COLUNA_CATEGORIA TEXT," +
+                "$COLUNA_COD_PROF INTEGER," +
+                "FOREIGN KEY ($COLUNA_COD_PROF) REFERENCES $TABELA_USUARIOS ($COLUNA_COD_US) ON UPDATE CASCADE ON DELETE CASCADE);"
 
         private const val QUERY_ATIVIDADES = "CREATE TABLE IF NOT EXISTS $TABELA_ATIVIDADES (" +
                 "$COLUNA_COD_ATIV INTEGER PRIMARY KEY, " +
                 "$COLUNA_NOME TEXT, " +
-                "$COLUNA_DESCRICAO TEXT);"
+                "$COLUNA_DESCRICAO TEXT," +
+                "$COLUNA_COD_PROF INTEGER NOT NULL," +
+                "FOREIGN KEY ($COLUNA_COD_PROF) REFERENCES $TABELA_USUARIOS ($COLUNA_COD_US) ON UPDATE CASCADE ON DELETE CASCADE);"
 
         private const val QUERY_US_AT = "CREATE TABLE IF NOT EXISTS $TABELA_US_AT (" +
                 "$COLUNA_COD_US_AT INTEGER PRIMARY KEY, " +
