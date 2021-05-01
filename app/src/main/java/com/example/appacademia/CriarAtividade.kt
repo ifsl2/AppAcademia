@@ -1,5 +1,6 @@
 package com.example.appacademia
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.RadioButton
@@ -27,6 +28,12 @@ class CriarAtividade : AppCompatActivity() {
             }else{
                 CadastrarAtividade()
             }
+        }
+
+        binding.voltar.setOnClickListener{
+            val intent = Intent(this, MenuProfessor::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
