@@ -26,7 +26,11 @@ class ListaAlunos : AppCompatActivity() {
         setContentView(binding.root)
 
         if (intent.extras != null) {
-            tipo = intent.extras!!.getString("TIPO_USUARIO").toString()
+            intent.extras!!.getString("TIPO_USUARIO").let {
+                if (it != null) {
+                    tipo = it
+                }
+            }
             codUsuario = intent.extras!!.getLong("COD_USUARIO")
         }
 
@@ -36,8 +40,13 @@ class ListaAlunos : AppCompatActivity() {
             var intent: Intent? = null
             intent = if (tipo == "PROFESSOR") {
                 Intent(this, MenuProfessor::class.java)
+
             } else {
                 Intent(this, MenuAluno::class.java)
+            }
+            if (intent != null) {
+                intent.putExtra("COD_USUARIO", codUsuario)
+                intent.putExtra("TIPO_USUARIO", tipo)
             }
             startActivity(intent)
             finish()
@@ -86,13 +95,13 @@ class ListaAlunos : AppCompatActivity() {
             if (data != null && data.count > 0) {
                 if (data.moveToFirst()) {
                     do {
-                        val al = Alunos(data.getInt(0), data.getString(1), data.getInt(5), data.getString(4))
+                        val al = Alunos(data.getInt(0), data.getString(3), data.getString(1), data.getInt(5), data.getString(4))
                         alunos.add(al)
                     } while (data.moveToNext())
                 }
-                Toast.makeText(applicationContext, "Data carregada!", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Data carregada!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(applicationContext, "No Data", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "No Data", Toast.LENGTH_SHORT).show()
             }
         }
         catch (ex: Exception) {

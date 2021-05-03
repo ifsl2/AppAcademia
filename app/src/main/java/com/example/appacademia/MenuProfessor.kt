@@ -17,7 +17,7 @@ class MenuProfessor : AppCompatActivity() {
         setContentView(binding.root)
         if (intent.extras != null)
         {
-            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+            codProfessor = intent.extras!!.getLong("COD_USUARIO")
         }
 
 
@@ -31,19 +31,19 @@ class MenuProfessor : AppCompatActivity() {
         }
         btnAtividades.setOnClickListener {
             val intent = Intent(this, ListaAtividade::class.java)
-            intent.putExtra("COD_PROFESSOR", codProfessor)
+            intent.putExtra("COD_USUARIO", codProfessor)
             startActivity(intent)
             finish()
         }
         btnAtividade.setOnClickListener {
             val intent = Intent(this, CriarAtividade::class.java)
-            intent.putExtra("COD_PROFESSOR", codProfessor)
+            intent.putExtra("COD_USUARIO", codProfessor)
             startActivity(intent)
             finish()
         }
         btnTreino.setOnClickListener {
             val intent = Intent(this, ListaAtividade::class.java)
-            intent.putExtra("COD_PROFESSOR", codProfessor)
+            intent.putExtra("COD_USUARIO", codProfessor)
             intent.putExtra("VIEWHOLDER_ACAO", 101)
             startActivity(intent)
             finish()
@@ -80,7 +80,7 @@ class MenuProfessor : AppCompatActivity() {
 
     private fun RedirectListUser(){
         val intent = Intent(this, ListaAlunos::class.java)
-        intent.putExtra("COD_PROFESSOR", codProfessor)
+        intent.putExtra("COD_USUARIO", codProfessor)
         intent.putExtra("TIPO_USUARIO", "PROFESSOR")
         startActivity(intent)
         finish()

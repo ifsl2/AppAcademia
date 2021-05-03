@@ -51,11 +51,8 @@ class FormLogin : AppCompatActivity() {
 
 
     private fun AuntenticarUsuario(email:String, senha:String){
-        val msgErro = binding.mensagemErro
-
         val usuario = db.recuperarUsuario(email)
         usuario.let {
-            msgErro.text = usuario.toString()
             if (usuario != null) {
                 if (usuario.usuario == email && usuario.senha == MD5(senha)) {
                     if(usuario.categoria == "Professor"){
@@ -75,14 +72,14 @@ class FormLogin : AppCompatActivity() {
 
     private fun RedirectLista(codAluno: Long){
         val intent = Intent(this, MenuAluno::class.java)
-        intent.putExtra("COD_ALUNO", codAluno)
+        intent.putExtra("COD_USUARIO", codAluno)
         startActivity(intent)
         finish()
     }
 
     private fun RedirectListaProfessor(codProfessor: Long){
         val intent = Intent(this, MenuProfessor::class.java)
-        intent.putExtra("COD_PROFESSOR", codProfessor)
+        intent.putExtra("COD_USUARIO", codProfessor)
         startActivity(intent)
         finish()
     }

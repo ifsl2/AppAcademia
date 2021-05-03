@@ -22,7 +22,7 @@ class FormCadastro2 : AppCompatActivity() {
 
         if (intent.extras != null)
         {
-            codAluno = intent.extras!!.getLong("COD_ALUNO")
+            codAluno = intent.extras!!.getLong("COD_USUARIO")
         }
 
         db = DBHelper(this)
@@ -33,7 +33,7 @@ class FormCadastro2 : AppCompatActivity() {
 
         binding.finalizar.setOnClickListener {
             val intent = Intent(this, MenuAluno::class.java)
-            intent.putExtra("CODIGO_ALUNO", codAluno)
+            intent.putExtra("COD_USUARIO", codAluno)
             startActivity(intent)
             finish()
         }
@@ -53,7 +53,7 @@ class FormCadastro2 : AppCompatActivity() {
             if (data != null && data.count > 0) {
                 if (data.moveToFirst()) {
                     do {
-                        val obj = Alunos(data.getInt(0), data.getString(1), data.getInt(5), data.getString(4))
+                        val obj = Alunos(data.getInt(0), data.getString(3), data.getString(1), data.getInt(5), data.getString(4))
                         professores.add(obj)
                     } while (data.moveToNext())
                 }

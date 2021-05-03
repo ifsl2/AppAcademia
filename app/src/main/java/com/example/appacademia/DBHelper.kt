@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_VERSAO) {
@@ -46,7 +45,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
                     c.getString(c.getColumnIndex(COLUNA_SENHA)),
                     c.getString(c.getColumnIndex(COLUNA_CATEGORIA)),
                     c.getString(c.getColumnIndex(COLUNA_NOME_USER)),
-                    c.getString(c.getColumnIndex(COLUNA_TELEFONE))
+                    c.getString(c.getColumnIndex(COLUNA_TELEFONE)),
+                    c.getInt(c.getColumnIndex(COLUNA_IDADE))
             )
             usuario.codigo = c.getString(c.getColumnIndex(COLUNA_COD_US)).toLong()
         }
@@ -93,6 +93,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
             val values = ContentValues()
             values.put(COLUNA_USUARIO, usuario.usuario)
             values.put(COLUNA_SENHA, usuario.senha?.let { MD5(it) })
+            values.put(COLUNA_IDADE, usuario.idade)
             values.put(COLUNA_CATEGORIA, usuario.categoria)
             values.put(COLUNA_NOME_USER, usuario.nome)
             values.put(COLUNA_TELEFONE, usuario.telefone)
@@ -130,7 +131,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         return db.update(TABELA_USUARIOS, values, "$COLUNA_USUARIO=?", arrayOf(usuario.codigo.toString()))
     }
 
-    fun adicionarAtividade(nome: String, descricao: String, codProfessor: String?, context: Context){
+    fun adicionarAtividade(nome: String, descricao: String, codProfessor: String, context: Context){
         val db : SQLiteDatabase = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUNA_NOME, nome)
@@ -143,7 +144,28 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, BD_NOME, null, BD_V
         } else {
             Toast.makeText(context, "Falha ao cadastrar atividade", Toast.LENGTH_SHORT).show()
         }
+    }
 
+    fun adicionarAtividadeAluno(repeticoes: Int, dias: String, codAtividade: Int, codAluno: Long, context: Context) : Long{
+        val db : SQLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUNA_REPETICOES, repeticoes)
+        contentValues.put(COLUNA_DIAS, dias)
+        contentValues.put(COLUNA_COD_US, codAluno)
+        contentValues.put(COLUNA_COD_ATIV, codAtividade)
+        val inserted = db.insert(TABELA_US_AT, null, contentValues)
+        db.close()
+        return inserted
+    }
+
+    fun readAtividadesAlunos(idAluno: String) : Cursor
+    {
+        val db:SQLiteDatabase = this.readableDatabase
+        return db.rawQuery("SELECT atividades.cod_atividade, atividades.nome, atividades.descricao, usuarios_atividades.repeticoes, usuarios_atividades.dias " +
+                "FROM atividades " +
+                "INNER JOIN usuarios_atividades " +
+                "ON usuarios_atividades.cod_atividade = atividades.cod_atividade " +
+                "WHERE usuarios_atividades.cod_usuario = ?", arrayOf(idAluno))
     }
 
     fun readAtividade(idProfessor: String) : Cursor

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.appacademia.databinding.ActivityMenuAlunoBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -19,7 +20,15 @@ class MenuAluno : AppCompatActivity() {
 
         if (intent.extras != null)
         {
-            codAluno = intent.extras!!.getLong("COD_ALUNO")
+            codAluno = intent.extras!!.getLong("COD_USUARIO")
+        }
+
+        binding.listaAtiv.setOnClickListener {
+            val intent = Intent(this, ListaTreinos::class.java)
+            intent.putExtra("TIPO_USUARIO", "ALUNO")
+            intent.putExtra("COD_USUARIO", codAluno)
+            startActivity(intent)
+            finish()
         }
 
         var btn = binding.listaUser

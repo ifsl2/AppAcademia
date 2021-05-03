@@ -19,7 +19,8 @@ import kotlin.properties.Delegates
 class ListaAtividade : AppCompatActivity() {
     internal lateinit var db:DBHelper
     private lateinit var binding: ActivityListaAtividadeBinding
-    private var codProfessor: Long = 0
+    private var codUsuario: Long = 0
+    private var tipo: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListaAtividadeBinding.inflate(layoutInflater)
@@ -29,14 +30,15 @@ class ListaAtividade : AppCompatActivity() {
 
         if (intent.extras != null)
         {
-            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+            codUsuario = intent.extras!!.getLong("COD_USUARIO")
+            tipo = intent.extras!!.getString("TIPO_USUARIO")
         }
 
         var atividades = readDataFunction()
 
         binding.voltar.setOnClickListener {
             val intent = Intent(this, MenuProfessor::class.java)
-            intent.putExtra("COD_PROFESSOR", codProfessor)
+            intent.putExtra("COD_USUARIO", codUsuario)
             startActivity(intent)
             finish()
         }
@@ -72,18 +74,18 @@ class ListaAtividade : AppCompatActivity() {
     private fun readDataFunction() : ArrayList<Atividades>{
         val atividades: ArrayList<Atividades> = ArrayList()
         try {
-            val data: Cursor = db.readAtividade(codProfessor.toString())
+            var data: Cursor = db.readAtividade(codUsuario.toString())
 
             if (data != null && data.count > 0) {
                 if (data.moveToFirst()) {
                     do {
-                        val atv = Atividades(data.getString(0).toInt(), data.getString(1), data.getString(2))
+                        var atv = Atividades(data.getString(0).toInt(), data.getString(1), data.getString(2))
                         atividades.add(atv)
                     } while (data.moveToNext())
                 }
-                Toast.makeText(applicationContext, "Data carregada!", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "Data carregada!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(applicationContext, "No Data", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "No Data", Toast.LENGTH_SHORT).show()
             }
         }
         catch (ex: Exception) {
