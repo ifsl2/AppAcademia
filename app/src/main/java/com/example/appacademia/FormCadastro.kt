@@ -59,7 +59,7 @@ class FormCadastro : AppCompatActivity() {
 
         val intent = Intent(this, FormCadastro2::class.java)
         intent.putExtra("VIEWHOLDER_ACAO", 100)
-        intent.putExtra("COD_ALUNO", codAluno)
+        intent.putExtra("COD_USUARIO", codAluno)
         startActivity(intent)
         finish()
     }
@@ -76,7 +76,7 @@ class FormCadastro : AppCompatActivity() {
 
         val radioButton: RadioButton = findViewById(rbGroup.checkedRadioButtonId)
 
-        val usuario = Usuarios(binding.editEmail.text.toString(), binding.editSenha.text.toString(), radioButton.text.toString(), nome, telefone)
+        val usuario = Usuarios(binding.editEmail.text.toString(), binding.editSenha.text.toString(), radioButton.text.toString(), nome, telefone, idade)
 
         var rowID = db.adicionarUsuario(usuario, this)
 

@@ -12,7 +12,7 @@
         android:id="@+id/listaAtiv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Atividades"
+        android:text="@string/Treinos"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:cornerRadius="10dp"

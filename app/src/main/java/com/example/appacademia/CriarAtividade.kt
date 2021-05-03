@@ -3,6 +3,7 @@ package com.example.appacademia
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.appacademia.databinding.ActivityCriarAtividadeBinding
 
 class CriarAtividade : AppCompatActivity() {
@@ -17,7 +18,7 @@ class CriarAtividade : AppCompatActivity() {
 
         if (intent.extras != null)
         {
-            codProfessor = intent.extras!!.getLong("COD_PROFESSOR")
+            codProfessor = intent.extras!!.getLong("COD_USUARIO")
         }
 
         db = DBHelper(this)
@@ -36,7 +37,7 @@ class CriarAtividade : AppCompatActivity() {
 
         binding.voltar.setOnClickListener{
             val intent = Intent(this, MenuProfessor::class.java)
-            intent.putExtra("CODIGO_PROFESSOR", codProfessor)
+            intent.putExtra("COD_USUARIO", codProfessor)
             startActivity(intent)
             finish()
         }
@@ -49,6 +50,7 @@ class CriarAtividade : AppCompatActivity() {
         var msgErro = binding.mensagemErro
 
         db.adicionarAtividade(nome, descricao, codProfessor.toString(), this)
-
+        binding.editNome.setText("")
+        binding.editDescricao.setText("")
     }
 }
