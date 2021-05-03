@@ -1,5 +1,6 @@
 package com.example.appacademia
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ class AtividadesAdapter(private val atividades: ArrayList<Atividades>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AtividadeViewHolder {
         val binding = LinhaBinding.inflate(inflater, parent, false)
-        return AtividadeViewHolder(binding)
+        return AtividadeViewHolder(binding, parent.context as Activity)
     }
 
     override fun onBindViewHolder(holder: AtividadeViewHolder, position: Int) {

@@ -24,6 +24,8 @@ class MenuProfessor : AppCompatActivity() {
         var btn = binding.listaUser
         var btnAtividade = binding.atividade
         var btnAtividades = binding.atividades
+        var btnTreino = binding.treino
+
         btn.setOnClickListener {
             RedirectListUser()
         }
@@ -36,6 +38,13 @@ class MenuProfessor : AppCompatActivity() {
         btnAtividade.setOnClickListener {
             val intent = Intent(this, CriarAtividade::class.java)
             intent.putExtra("COD_PROFESSOR", codProfessor)
+            startActivity(intent)
+            finish()
+        }
+        btnTreino.setOnClickListener {
+            val intent = Intent(this, ListaAtividade::class.java)
+            intent.putExtra("COD_PROFESSOR", codProfessor)
+            intent.putExtra("VIEWHOLDER_ACAO", 101)
             startActivity(intent)
             finish()
         }
@@ -77,3 +86,5 @@ class MenuProfessor : AppCompatActivity() {
         finish()
     }
 }
+
+

@@ -36,7 +36,7 @@ class ListaAtividade : AppCompatActivity() {
 
         binding.voltar.setOnClickListener {
             val intent = Intent(this, MenuProfessor::class.java)
-            intent.putExtra("CODIGO_PROFESSOR", codProfessor)
+            intent.putExtra("COD_PROFESSOR", codProfessor)
             startActivity(intent)
             finish()
         }
@@ -48,7 +48,6 @@ class ListaAtividade : AppCompatActivity() {
             addItemDecoration(DividerItemDecoration(this@ListaAtividade, DividerItemDecoration.VERTICAL))
             adapter = AtividadesAdapter(atividades, layoutInflater)
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
